@@ -2,7 +2,6 @@ from django.db.models import IntegerField, Value
 from django_filters.rest_framework import FilterSet, filters
 
 from users.models import User
-
 from .models import Ingredient, Recipe
 
 
@@ -58,7 +57,7 @@ class IngredientSearchFilter(FilterSet):
         contain_queryset = (
             queryset.filter(name__icontains=value)
             .exclude(
-                pk__in=(ingredient.pk for ingredient in start_with_queryset)
+                pk__in=queryset.values_list("ingredient.pk", flat=True)
             )
             .annotate(order=Value(1, IntegerField()))
         )

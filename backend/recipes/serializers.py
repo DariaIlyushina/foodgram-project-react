@@ -1,8 +1,8 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from users.serializers import CustomUserSerializer
-
 from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
 
@@ -143,6 +143,12 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             "text",
             "cooking_time",
         )
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Ingredient.objects.all(),
+                fields=('recipe', 'ingredient'),
+            )
+        ]
 
     def _add_tags_and_ingredients(self, recipe, tags_data, ingredients_data):
         recipe.tags.set(tags_data)
@@ -150,9 +156,13 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         for item in ingredients_data:
             ingredient = item.get("ingredient")
             amount = item.get("amount")
-            ingredient_amount, _ = IngredientAmount.objects.get_or_create(
-                ingredient=ingredient,
-                amount=amount,
+            ingredient_amount = IngredientAmount.objects.bulk_create(
+                [
+                    IngredientAmount(
+                        ingredient=ingredient,
+                        amount=amount,
+                    )
+                ]
             )
             ingredient_amounts.append(ingredient_amount)
         recipe.ingredients.set(ingredient_amounts)
@@ -171,9 +181,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         instance.tags.clear()
         tags_data = validated_data.pop("tags")
         ingredients_data = validated_data.pop("ingredients")
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+        super(RecipeWriteSerializer, self).update(instance, validated_data)
         instance.save()
         return self._add_tags_and_ingredients(
-            instance, tags_data, ingredients_data
-        )
+            instance, tags_data, ingredients_data)

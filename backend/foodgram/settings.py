@@ -1,7 +1,8 @@
 import os
+import sys
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.getenv("SECRET_KEY", default="django-insecure-123")
 
@@ -13,8 +14,7 @@ ALLOWED_HOSTS = [
     "backend",
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://*.127.0.0.1', 'http://*.localhost']
-
+CSRF_TRUSTED_ORIGINS = ['http://*.127.0.0.1', 'http://*.localhost', 'http://*.testserver']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -72,6 +72,7 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", default="5432"),
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {

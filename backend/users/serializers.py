@@ -6,6 +6,16 @@ from recipes.models import Recipe
 from .models import User
 
 
+def subscribe(self, obj):
+    user = self.context["request"].user
+    return (
+        user.is_authenticated
+        and user.subscribers.filter(
+            author=obj,
+        ).exists()
+    )
+
+
 class CustomUserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
@@ -21,13 +31,7 @@ class CustomUserSerializer(UserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        user = self.context["request"].user
-        return (
-            user.is_authenticated
-            and user.subscribers.filter(
-                author=obj,
-            ).exists()
-        )
+        subscribe(self, obj)
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -81,6 +85,9 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
             "recipes",
             "recipes_count",
         )
+
+    def get_is_subscribed(self, obj):
+        subscribe(self, obj)
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj).count()

@@ -43,19 +43,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        instance = serializer.instance
-        serializer = RecipeReadSerializer(
-            instance=instance, context={"request": request}
-        )
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
-
     def _do_post_method(self, request, model, error_data):
         user = request.user
         recipe = self.get_object()
@@ -92,11 +79,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def favorite(self, request, pk=None):
+        model = Favorite
         if request.method == "POST":
-            model = Favorite
             error_data = {"errors": "Рецепт уже добавлен в избранное"}
             return self._do_post_method(request, model, error_data)
-        model = Favorite
         error_data = {"errors": "Рецепт уже удален из избранного"}
         return self._do_delete_method(request, model, error_data)
 
@@ -106,11 +92,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def shopping_cart(self, request, pk=None):
+        model = ShoppingCart
         if request.method == "POST":
-            model = ShoppingCart
             error_data = {"errors": "Рецепт уже добавлен в корзину"}
             return self._do_post_method(request, model, error_data)
-        model = ShoppingCart
         error_data = {"errors": "Рецепт уже удален из корзины"}
         return self._do_delete_method(request, model, error_data)
 
@@ -132,24 +117,24 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'ingredient_sum',
                 'ingredient__measurement_unit',
         )
-        shopping_list = {}
+        shopping_cart = {}
         for item in ingredient_queryset:
             name = item[0]
-            if name not in shopping_list:
-                shopping_list[name] = {
+            if name not in shopping_cart:
+                shopping_cart[name] = {
                     'amount': item[1],
                     'measurement_unit': item[2],
                 }
             else:
-                shopping_list[name]['amount'] += item[2]
+                shopping_cart[name]['amount']
         filename = 'hopping_list.txt'
-        shopping_cart_list = 'Список покупок: '
-        for list_number, (name, data) in enumerate(shopping_list.items(), 1):
-            shopping_cart_list += (
+        shopping_cart_text = 'Список покупок: '
+        for list_number, (name, data) in enumerate(shopping_cart.items(), 1):
+            shopping_cart_text += (
                     f'{list_number}. {name} - {data["amount"]} '
                     f'{data["measurement_unit"]}')
         response = HttpResponse(
-            shopping_cart_list, content_type='text.txt; charset=utf-8'
+            shopping_cart_text, content_type='text.txt; charset=utf-8'
         )
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response

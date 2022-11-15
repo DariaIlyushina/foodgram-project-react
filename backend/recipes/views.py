@@ -12,8 +12,8 @@ from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
 from .pagination import RecipePagination
 from .permissions import IsAuthorOrAdminOrIsAuthenticatedOrReadOnly
 from .serializers import (IngredientSerializer, RecipeReadSerializer,
-                          RecipeWriteSerializer, ShortRecipeSerializer,
-                          TagSerializer)
+                          RecipeWriteSerializer,
+                          ShortRecipeSerializer, TagSerializer)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -125,8 +125,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     'amount': item[1],
                     'measurement_unit': item[2],
                 }
-            else:
-                shopping_cart[name]['amount']
         filename = 'hopping_list.txt'
         shopping_cart_text = 'Список покупок: '
         for list_number, (name, data) in enumerate(shopping_cart.items(), 1):

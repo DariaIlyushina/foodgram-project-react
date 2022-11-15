@@ -47,4 +47,3 @@ class IngredientSearchFilter(FilterSet):
     class Meta:
         model = Ingredient
         fields = ('name',)
-

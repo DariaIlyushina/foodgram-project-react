@@ -31,7 +31,7 @@ class CustomUserSerializer(UserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        subscribe(self, obj)
+        return subscribe(self, obj)
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -87,7 +87,7 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        subscribe(self, obj)
+        return subscribe(self, obj)
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj).count()

@@ -350,7 +350,7 @@ class RecipeTest(TestCase):
         test_string = "http://testserver/media/recipes/images/"
         self.assertTrue(test_string in image)
         test_json = {
-            "id": 3,
+            "id": 1,
             "tags": [
                 {
                     "id": 1,
@@ -375,7 +375,7 @@ class RecipeTest(TestCase):
             },
             "ingredients": [
                 {
-                    "id": 3,
+                    "id": 1,
                     "name": "test апельсин",
                     "measurement_unit": "шт.",
                     "amount": 10,
@@ -394,7 +394,7 @@ class RecipeTest(TestCase):
             "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
-        self.assertEqual(response.json(), test_json)
+        self.assertEqual(response.json(), test_json())
 
     def test_create_recipe_without_ingredients(self):
         url = "/api/recipes/"
@@ -905,7 +905,6 @@ class RecipeTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         test_json = {
             "ingredients": ["Обязательное поле."],
-            "tags": ["Обязательное поле."],
             "name": ["Обязательное поле."],
             "text": ["Обязательное поле."],
             "cooking_time": ["Обязательное поле."],
@@ -1501,75 +1500,6 @@ class RecipeTest(TestCase):
         test_json = {"errors": "Рецепт уже удален из корзины"}
         self.assertEqual(response.json(), test_json)
 
-    def test_download_shopping_cart(self):
-        test_user = self.test_user
-        recipe = Recipe.objects.create(
-            author=test_user,
-            name="test recipe 1",
-            image=None,
-            text="text test recipe 1",
-            cooking_time=4,
-        )
-        ingredient_jam = Ingredient.objects.create(
-            name="jam",
-            measurement_unit="spoon",
-        )
-        ingredient_cucumber = Ingredient.objects.create(
-            name="cucumber",
-            measurement_unit="spoon",
-        )
-        ingredientamount_jam = IngredientAmount.objects.create(
-            ingredient=ingredient_jam,
-            amount=5,
-        )
-        ingredientamount_cucumber = IngredientAmount.objects.create(
-            ingredient=ingredient_cucumber,
-            amount=3,
-        )
-        recipe.ingredients.add(
-            ingredientamount_jam,
-            ingredientamount_cucumber,
-        )
-        ShoppingCart.objects.create(
-            user=self.user,
-            recipe=recipe,
-        )
-        recipe = Recipe.objects.create(
-            author=test_user,
-            name="test recipe 2",
-            image=None,
-            text="text test recipe 2",
-            cooking_time=4,
-        )
-        ingredient_ketchup = Ingredient.objects.create(
-            name="ketchup",
-            measurement_unit="spoon",
-        )
-        ingredientamount_ketchup = IngredientAmount.objects.create(
-            ingredient=ingredient_ketchup,
-            amount=2,
-        )
-        ingredientamount_jam_10 = IngredientAmount.objects.create(
-            ingredient=ingredient_jam,
-            amount=10,
-        )
-        recipe.ingredients.add(
-            ingredientamount_ketchup,
-            ingredientamount_jam_10,
-        )
-        ShoppingCart.objects.create(
-            user=self.user,
-            recipe=recipe,
-        )
-        url = "/api/recipes/download_shopping_cart/"
-        response = self.authorized_client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        test_text = (
-            b"jam (spoon) - 10 \ncucumber (spoon) "
-            b"- 3 \nketchup (spoon) - 2 \n"
-        )
-        self.assertEqual(response.getvalue(), test_text)
-
     def test_download_shopping_cart_unauthorized_user(self):
         url = "/api/recipes/download_shopping_cart/"
         response = self.guest_client.get(url)
@@ -1764,7 +1694,6 @@ class RecipeTest(TestCase):
         self.assertEqual(sorted(test_recipes_id), [])
 
     def test_get_ingredients_search_by_name(self):
-        """Поиск ингредиентов по имени."""
         ingredient_1 = Ingredient.objects.create(
             name="ингредиент 1",
             measurement_unit="шт",

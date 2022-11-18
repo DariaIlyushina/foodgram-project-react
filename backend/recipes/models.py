@@ -111,7 +111,7 @@ class IngredientAmount(models.Model):
         on_delete=models.CASCADE,
     )
 
-    ingredients = models.ForeignKey(
+    ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         verbose_name="Ингредиент",

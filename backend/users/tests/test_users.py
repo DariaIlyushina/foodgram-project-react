@@ -17,7 +17,7 @@ class UsersViewsTest(TestCase):
 
         cls.test_user = User.objects.create_user(username="testusername")
 
-        cls.user_vasya = User.objects.create_user(
+        cls.user_alexiy = User.objects.create_user(
             email="Alexiy@gmail.com",
             username="Alexiy.popka",
             first_name="Константин",
@@ -130,8 +130,8 @@ class UsersViewsTest(TestCase):
         data = {
             "email": "Alexiy@gmail.com",
             "username": "Alexiy.popka",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "first_name": "Kostya",
+            "last_name": "Khrist",
             "password": "s4433kfywyfhvnsklqlqllq",
         }
         response = self.guest_client.post(url, data)
@@ -141,8 +141,8 @@ class UsersViewsTest(TestCase):
             "email": "Alexiy@gmail.com",
             "id": users_count + 1,
             "username": "Alexiy.popka",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "first_name": "Kostya",
+            "last_name": "Khrist",
         }
         self.assertEqual(response.json(), test_json)
 
@@ -257,7 +257,7 @@ class UsersViewsTest(TestCase):
         )
 
     def test_user_profile(self):
-        user = self.user_vasya
+        user = self.user_alexiy
         client_vasya = APIClient()
         client_vasya.force_authenticate(user)
         url = f"/api/users/{user.id}/"
@@ -274,7 +274,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_user_profileby_by_authorized_user(self):
-        user = self.user_vasya
+        user = self.user_alexiy
         url = f"/api/users/{user.id}/"
         response = self.authorized_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -289,7 +289,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_user_profile_by_unauthorized_user(self):
-        user = self.user_vasya
+        user = self.user_alexiy
         url = f"/api/users/{user.id}/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -423,7 +423,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_subscribe_authorized_client(self):
-        user = self.user_vasya
+        user = self.user_alexiy
         client_vasya = APIClient()
         client_vasya.force_authenticate(user)
         count = Subscription.objects.count()

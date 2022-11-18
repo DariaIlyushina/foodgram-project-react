@@ -394,7 +394,7 @@ class RecipeTest(TestCase):
             "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
-        self.assertEqual(response.json(), test_json())
+        self.assertEqual(response.json(), test_json)
 
     def test_create_recipe_without_ingredients(self):
         url = "/api/recipes/"

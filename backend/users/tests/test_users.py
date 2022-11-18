@@ -18,10 +18,10 @@ class UsersViewsTest(TestCase):
         cls.test_user = User.objects.create_user(username="testusername")
 
         cls.user_vasya = User.objects.create_user(
-            email="vasya_pupkin@mail.com",
-            username="vasya_pupkin",
-            first_name="Vasya",
-            last_name="Pupkin",
+            email="Alexiy@gmail.com",
+            username="Alexiy.popka",
+            first_name="Константин",
+            last_name="Христорождественский",
         )
 
         Subscription.objects.create(
@@ -113,7 +113,7 @@ class UsersViewsTest(TestCase):
                     "is_subscribed": False,
                 },
                 {
-                    "email": "vasya_pupkin@mail.com",
+                    "email": "Alexiy@gmail.com",
                     "id": 3,
                     "username": "vasya_pupkin",
                     "first_name": "Vasya",
@@ -128,8 +128,8 @@ class UsersViewsTest(TestCase):
         url = "/api/users/"
         users_count = User.objects.count()
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
+            "email": "Alexiy@gmail.com",
+            "username": "Alexiy.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
             "password": "s4433kfywyfhvnsklqlqllq",
@@ -138,9 +138,9 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), users_count + 1)
         test_json = {
-            "email": "kostya.HR@yandex.ru",
+            "email": "Alexiy@gmail.com",
             "id": users_count + 1,
-            "username": "kostya.HR",
+            "username": "Alexiy.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
         }
@@ -149,8 +149,8 @@ class UsersViewsTest(TestCase):
     def test_create_user_with_simple_password(self):
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
+            "email": "Alexiy@gmail.com",
+            "username": "Alexiy.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
             "password": "123",
@@ -172,8 +172,8 @@ class UsersViewsTest(TestCase):
     def test_create_user_without_password(self):
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
+            "email": "Alexiy@gmail.com",
+            "username": "Alexiy.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
         }
@@ -186,7 +186,7 @@ class UsersViewsTest(TestCase):
     def test_create_user_without_email(self):
         url = "/api/users/"
         data = {
-            "username": "kostya.HR",
+            "username": "Alexiy.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
             "password": "cknvkjcn2313556vkjdfvq",
@@ -198,7 +198,7 @@ class UsersViewsTest(TestCase):
     def test_create_user_without_username(self):
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
+            "email": "Alexiy@gmail.com",
             "first_name": "Константин",
             "last_name": "Христорождественский",
             "password": "fdgk4556dfmgkfdmglkfd",
@@ -212,8 +212,8 @@ class UsersViewsTest(TestCase):
     def test_create_user_without_first_name(self):
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
+            "email": "Alexiy@gmail.com",
+            "username": "Alexiy.popka",
             "last_name": "Христорождественский",
             "password": "dvdvnmsfn44567klmlvmkdf",
         }
@@ -227,8 +227,8 @@ class UsersViewsTest(TestCase):
 
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
+            "email": "Alexiy@gmail.com",
+            "username": "Alexiy.popka",
             "first_name": "Константин",
             "password": "dmkdfks567tokgho",
         }
@@ -242,8 +242,8 @@ class UsersViewsTest(TestCase):
 
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
+            "email": "Alexiy@gmail.com",
+            "username": "Alexiy.popka",
             "password": "vmkdfmbkfmbklfldggmbk4567",
         }
         response = self.guest_client.post(url, data)
@@ -257,7 +257,6 @@ class UsersViewsTest(TestCase):
         )
 
     def test_user_profile(self):
-        """Профиль пользователя."""
         user = self.user_vasya
         client_vasya = APIClient()
         client_vasya.force_authenticate(user)
@@ -265,9 +264,9 @@ class UsersViewsTest(TestCase):
         response = client_vasya.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         test_json = {
-            "email": "kostya.HR@yandex.ru",
+            "email": "Alexiy@gmail.com",
             "id": 3,
-            "username": "kostya.HR",
+            "username": "Alexiy.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
             "is_subscribed": False,
@@ -280,9 +279,9 @@ class UsersViewsTest(TestCase):
         response = self.authorized_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         test_json = {
-            "email": "kostya.HR@yandex.ru",
+            "email": "Alexiy@gmail.com",
             "id": 3,
-            "username": "kostya.HR",
+            "username": "Alexiy.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
             "is_subscribed": True,
@@ -324,7 +323,7 @@ class UsersViewsTest(TestCase):
         url = "/api/users/me/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данных нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)
 
     def test_set_password(self):
@@ -383,7 +382,7 @@ class UsersViewsTest(TestCase):
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данныех нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)
 
     def test_get_authorization_token(self):
@@ -406,7 +405,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         test_json = {
             "non_field_errors": [
-                "Невозможно войти с такими данными."
+                "Невозможно войти с предоставленными учетными данными."
             ]
         }
         self.assertEqual(response.json(), test_json)
@@ -482,7 +481,7 @@ class UsersViewsTest(TestCase):
         url = f"/api/users/{self.user.id}/subscribe/"
         response = self.guest_client.post(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данных нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)
 
     def test_subscribe_404(self):
@@ -635,5 +634,5 @@ class UsersViewsTest(TestCase):
         url = "/api/users/subscriptions/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данных нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)

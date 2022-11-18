@@ -149,10 +149,10 @@ class UsersViewsTest(TestCase):
     def test_create_user_with_simple_password(self):
         url = "/api/users/"
         data = {
-            "email": "Alexiy@gmail.com",
-            "username": "Alexiy.popka",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "email": "Alexiy@yandex.ru",
+            "username": "Alexiy",
+            "first_name": "Конст",
+            "last_name": "Христ",
             "password": "123",
         }
         response = self.guest_client.post(url, data)
@@ -172,8 +172,8 @@ class UsersViewsTest(TestCase):
     def test_create_user_without_password(self):
         url = "/api/users/"
         data = {
-            "email": "Alexiy@gmail.com",
-            "username": "Alexiy.popka",
+            "email": "Alex@gmail.com",
+            "username": "Alex.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
         }
@@ -186,7 +186,7 @@ class UsersViewsTest(TestCase):
     def test_create_user_without_email(self):
         url = "/api/users/"
         data = {
-            "username": "Alexiy.popka",
+            "username": "Ale.popka",
             "first_name": "Константин",
             "last_name": "Христорождественский",
             "password": "cknvkjcn2313556vkjdfvq",
@@ -198,7 +198,7 @@ class UsersViewsTest(TestCase):
     def test_create_user_without_username(self):
         url = "/api/users/"
         data = {
-            "email": "Alexiy@gmail.com",
+            "email": "Al@gmail.com",
             "first_name": "Константин",
             "last_name": "Христорождественский",
             "password": "fdgk4556dfmgkfdmglkfd",
@@ -212,8 +212,8 @@ class UsersViewsTest(TestCase):
     def test_create_user_without_first_name(self):
         url = "/api/users/"
         data = {
-            "email": "Alexiy@gmail.com",
-            "username": "Alexiy.popka",
+            "email": "Alexiyop@gmail.com",
+            "username": "Alexiyop.popka",
             "last_name": "Христорождественский",
             "password": "dvdvnmsfn44567klmlvmkdf",
         }
@@ -227,8 +227,8 @@ class UsersViewsTest(TestCase):
 
         url = "/api/users/"
         data = {
-            "email": "Alexiy@gmail.com",
-            "username": "Alexiy.popka",
+            "email": "Alexiyopa@gmail.com",
+            "username": "Alexiyopa.popka",
             "first_name": "Константин",
             "password": "dmkdfks567tokgho",
         }
@@ -242,8 +242,8 @@ class UsersViewsTest(TestCase):
 
         url = "/api/users/"
         data = {
-            "email": "Alexiy@gmail.com",
-            "username": "Alexiy.popka",
+            "email": "Alexiyjopa@gmail.com",
+            "username": "Alexiyjopa.popka",
             "password": "vmkdfmbkfmbklfldggmbk4567",
         }
         response = self.guest_client.post(url, data)

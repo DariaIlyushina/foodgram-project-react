@@ -26,7 +26,7 @@ class UsersViewsTest(TestCase):
 
         Subscription.objects.create(
             user=cls.user,
-            author=cls.user_vasya,
+            author=cls.user_alexiy,
         )
 
         cls.ingredient_orange = Ingredient.objects.create(

@@ -34,7 +34,7 @@ class UsersViewsTest(TestCase):
             measurement_unit="шт.",
         )
         cls.ingredient_jam = Ingredient.objects.create(
-            name="test джем",
+            name="test варенье",
             measurement_unit="ложка",
         )
         cls.tag_breakfast = Tag.objects.create(
@@ -43,7 +43,7 @@ class UsersViewsTest(TestCase):
             slug="breakfast",
         )
         cls.tag_dinner = Tag.objects.create(
-            name="test Ужин",
+            name="test Обед",
             color="#6AA84FFF",
             slug="dinner",
         )
@@ -83,11 +83,13 @@ class UsersViewsTest(TestCase):
         self.assertEqual(True, True)
 
     def test_get_users_list_unauthorized_user(self):
+        """Получение списка всех пользователей анонимом."""
         url = "/api/users/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_users_list(self):
+        """Получение списка всех пользователей авторизованным пользователем."""
         url = "/api/users/"
         response = self.authorized_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -125,34 +127,36 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_create_user(self):
+        """Регистрация пользователя."""
         url = "/api/users/"
         users_count = User.objects.count()
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "email": "vpupkin@yandex.ru",
+            "username": "vasya.pupkin",
+            "first_name": "Вася",
+            "last_name": "Пупкин",
             "password": "s4433kfywyfhvnsklqlqllq",
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), users_count + 1)
         test_json = {
-            "email": "kostya.HR@yandex.ru",
+            "email": "vpupkin@yandex.ru",
             "id": users_count + 1,
-            "username": "kostya.HR",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "username": "vasya.pupkin",
+            "first_name": "Вася",
+            "last_name": "Пупкин",
         }
         self.assertEqual(response.json(), test_json)
 
     def test_create_user_with_simple_password(self):
+        """Регистрация пользователя с простым паролем."""
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "email": "vpupkin@yandex.ru",
+            "username": "vasya.pupkin",
+            "first_name": "Вася",
+            "last_name": "Пупкин",
             "password": "123",
         }
         response = self.guest_client.post(url, data)
@@ -170,12 +174,13 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_create_user_without_password(self):
+        """Регистрация пользователя без пароля."""
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "email": "vpupkin@yandex.ru",
+            "username": "vasya.pupkin",
+            "first_name": "Вася",
+            "last_name": "Пупкин",
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -184,24 +189,26 @@ class UsersViewsTest(TestCase):
         )
 
     def test_create_user_without_email(self):
+        """Регистрация пользователя без почты."""
         url = "/api/users/"
         data = {
-            "username": "kostya.HR",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
-            "password": "cknvkjcn2313556vkjdfvq",
+            "username": "vasya.pupkin",
+            "first_name": "Вася",
+            "last_name": "Пупкин",
+            "password": "s4433kfywyfhvnsklqlqllq",
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.json(), {"email": ["Обязательное поле."]})
 
     def test_create_user_without_username(self):
+        """Регистрация пользователя без имени пользователя."""
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
-            "password": "fdgk4556dfmgkfdmglkfd",
+            "email": "vpupkin@yandex.ru",
+            "first_name": "Вася",
+            "last_name": "Пупкин",
+            "password": "s4433kfywyfhvnsklqlqllq",
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -210,12 +217,13 @@ class UsersViewsTest(TestCase):
         )
 
     def test_create_user_without_first_name(self):
+        """Регистрация пользователя без first_name."""
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
-            "last_name": "Христорождественский",
-            "password": "dvdvnmsfn44567klmlvmkdf",
+            "email": "vpupkin@yandex.ru",
+            "username": "vasya.pupkin",
+            "last_name": "Пупкин",
+            "password": "s4433kfywyfhvnsklqlqllq",
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -224,13 +232,13 @@ class UsersViewsTest(TestCase):
         )
 
     def test_create_user_without_last_name(self):
-
+        """Регистрация пользователя без last_name."""
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
-            "first_name": "Константин",
-            "password": "dmkdfks567tokgho",
+            "email": "vpupkin@yandex.ru",
+            "username": "vasya.pupkin",
+            "first_name": "Вася",
+            "password": "s4433kfywyfhvnsklqlqllq",
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -239,12 +247,12 @@ class UsersViewsTest(TestCase):
         )
 
     def test_create_user_without_first_last_names(self):
-
+        """Регистрация пользователя без имени и фамилии."""
         url = "/api/users/"
         data = {
-            "email": "kostya.HR@yandex.ru",
-            "username": "kostya.HR",
-            "password": "vmkdfmbkfmbklfldggmbk4567",
+            "email": "vpupkin@yandex.ru",
+            "username": "vasya.pupkin",
+            "password": "s4433kfywyfhvnsklqlqllq",
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -265,31 +273,33 @@ class UsersViewsTest(TestCase):
         response = client_vasya.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         test_json = {
-            "email": "kostya.HR@yandex.ru",
+            "email": "vasya_pupkin@mail.com",
             "id": 3,
-            "username": "kostya.HR",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "username": "vasya_pupkin",
+            "first_name": "Vasya",
+            "last_name": "Pupkin",
             "is_subscribed": False,
         }
         self.assertEqual(response.json(), test_json)
 
     def test_user_profileby_by_authorized_user(self):
+        """Профиль пользователя, авторизованным пользователем."""
         user = self.user_vasya
         url = f"/api/users/{user.id}/"
         response = self.authorized_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         test_json = {
-            "email": "kostya.HR@yandex.ru",
+            "email": "vasya_pupkin@mail.com",
             "id": 3,
-            "username": "kostya.HR",
-            "first_name": "Константин",
-            "last_name": "Христорождественский",
+            "username": "vasya_pupkin",
+            "first_name": "Vasya",
+            "last_name": "Pupkin",
             "is_subscribed": True,
         }
         self.assertEqual(response.json(), test_json)
 
     def test_user_profile_by_unauthorized_user(self):
+        """Профиль пользователя. Учетные данные не были предоставлены."""
         user = self.user_vasya
         url = f"/api/users/{user.id}/"
         response = self.guest_client.get(url)
@@ -298,6 +308,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_user_profile_404(self):
+        """Профиль пользователя. Страница не найдена."""
         count = User.objects.count()
         url = f"/api/users/{count + 1}/"
         response = self.authorized_client.get(url)
@@ -306,6 +317,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_current_user_profile(self):
+        """Профиль текущего пользователя."""
         user = User.objects.get(username="authorized_user")
         url = "/api/users/me/"
         response = self.authorized_client.get(url)
@@ -321,28 +333,33 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_current_user_profile_401(self):
+        """Профиль текущего пользователя.
+        401 пользователь не авторизован."""
         url = "/api/users/me/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данных нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)
 
     def test_set_password(self):
+        """Изменение пароля."""
         url = "/api/users/set_password/"
         user = User.objects.create_user(
             username="test_user",
-            password="fggkfgme345",
+            password="1wkfy267snsndndnd",
         )
         client = APIClient()
         client.force_authenticate(user)
         data = {
-            "new_password": "qorperplfb56",
-            "current_password": "fggkfgme345",
+            "new_password": "yydhdhdje81ihnsksd",
+            "current_password": "1wkfy267snsndndnd",
         }
         response = client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_set_password_incorrect_current_password(self):
+        """Изменение пароля. Некорректный текущий пароль.
+        Неправильный пароль."""
         url = "/api/users/set_password/"
         user = User.objects.create_user(
             username="test_user",
@@ -360,6 +377,8 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_set_password_no_new_password(self):
+        """Изменение пароля. Некорректный текущий пароль.
+        Обязательное поле."""
         url = "/api/users/set_password/"
         user = User.objects.create_user(
             username="test_user",
@@ -376,6 +395,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_set_password_401(self):
+        """Изменение пароля. 401 пользователь не авторизован."""
         url = "/api/users/set_password/"
         data = {
             "new_password": "yydhdhdje81ihnsksd",
@@ -383,10 +403,11 @@ class UsersViewsTest(TestCase):
         }
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данныех нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)
 
     def test_get_authorization_token(self):
+        """Получить токен авторизации."""
         url = "/api/auth/token/login/"
         User.objects.create_user(
             username="test_user",
@@ -399,24 +420,26 @@ class UsersViewsTest(TestCase):
         self.assertTrue("auth_token" in response.json().keys())
 
     def test_get_authorization_token_with_invalid_data(self):
-
+        """Получить токен авторизации с невалидными данными."""
         url = "/api/auth/token/login/"
         data = {"password": "string", "email": "string"}
         response = self.guest_client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         test_json = {
             "non_field_errors": [
-                "Невозможно войти с такими данными."
+                "Невозможно войти с предоставленными учетными данными."
             ]
         }
         self.assertEqual(response.json(), test_json)
 
     def test_deleting_token(self):
+        """Удаление токена."""
         url = "/api/auth/token/logout/"
         response = self.authorized_client.post(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_deleting_token_401(self):
+        """Удаление токена. 401 пользователь не авторизован."""
         url = "/api/auth/token/logout/"
         response = self.guest_client.post(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -424,6 +447,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_subscribe_authorized_client(self):
+        """Подписаться авторизованным пользователем."""
         user = self.user_vasya
         client_vasya = APIClient()
         client_vasya.force_authenticate(user)
@@ -458,6 +482,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_subscribe_yourself_not_allowed(self):
+        """Нельзя подписаться на самого себя."""
         url = f"/api/users/{self.user.id}/subscribe/"
         response = self.authorized_client.post(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -465,6 +490,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_subscribe_user_twice(self):
+        """Нельзя подписаться на пользователя, на которого вы уже подписаны."""
         test_user = self.test_user
         authorized_client = APIClient()
         authorized_client.force_authenticate(test_user)
@@ -479,13 +505,15 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_subscribe_guest_client(self):
+        """Неавторизованный пользователь не может подписываться."""
         url = f"/api/users/{self.user.id}/subscribe/"
         response = self.guest_client.post(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данных нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)
 
     def test_subscribe_404(self):
+        """Нельзя подписаться на несущесвующего пользователя."""
         user_count = User.objects.count()
         url = f"/api/users/{user_count + 1}/subscribe/"
         response = self.authorized_client.post(url)
@@ -494,6 +522,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_unsubscribe_authorized_client(self):
+        """Отписаться авторизованным пользователем."""
         test_user = self.test_user
         authorized_client = APIClient()
         authorized_client.force_authenticate(test_user)
@@ -507,6 +536,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_unsubscribe_from_user_you_are_not_subscribing(self):
+        """Нельзя отписаться от пользователя, на которого вы не подписаны."""
         test_user = self.test_user
         authorized_client = APIClient()
         authorized_client.force_authenticate(test_user)
@@ -524,6 +554,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_unsubscribe_guest_client(self):
+        """Неавторизованный пользователь не может отписываться."""
         url = f"/api/users/{self.user.id}/subscribe/"
         response = self.guest_client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -531,6 +562,7 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_unsubscribe_404(self):
+        """Нельзя отписаться от несущесвующего пользователя."""
         count = User.objects.count()
         url = f"/api/users/{count + 1}/subscribe/"
         response = self.authorized_client.delete(url)
@@ -539,6 +571,8 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_subscriptions(self):
+        """Возвращает пользователей, на которых подписан текущий пользователь.
+        сортировка от новых к старым подпискам"""
         test_author_6 = User.objects.create(username="test_author_6")
         test_author_7 = User.objects.create(username="test_author_7")
         test_author_5 = User.objects.create(username="test_author_5")
@@ -632,8 +666,9 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_subscriptions_authentication_credentials_were_not_provided(self):
+        """Мои подписки. Учетные данные не были предоставлены."""
         url = "/api/users/subscriptions/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данных нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)

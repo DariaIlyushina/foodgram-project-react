@@ -2,6 +2,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from users.serializers import CustomUserSerializer
+
 from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
 
@@ -170,7 +171,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         instance.tags.clear()
         tags_data = validated_data.pop("tags")
         ingredients_data = validated_data.pop("ingredients")
-        super(RecipeWriteSerializer, self).update(instance, validated_data)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
         return self._add_tags_and_ingredients(
             instance, tags_data, ingredients_data
         )

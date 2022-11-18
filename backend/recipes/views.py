@@ -47,8 +47,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         user = request.user
         recipe = self.get_object()
         if model.objects.filter(
-            user=user,
-            recipe=recipe,
+                user=user,
+                recipe=recipe,
         ).exists():
             return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
         model.objects.create(
@@ -111,11 +111,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ).values(
             "ingredient__name",
             "ingredient__measurement_unit",
-        ).annotate(ingredient_sum=Sum('amount')
+        ).annotate(
+            ingredient_sum=Sum('amount')
         ).values_list(
-                'ingredient__name',
-                'ingredient_sum',
-                'ingredient__measurement_unit',
+            'ingredient__name',
+            'ingredient_sum',
+            'ingredient__measurement_unit',
         )
         shopping_cart = {}
         for item in ingredient_queryset:
@@ -129,8 +130,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         shopping_cart_text = 'Список покупок: '
         for list_number, (name, data) in enumerate(shopping_cart.items(), 1):
             shopping_cart_text += (
-                    f'{list_number}. {name} - {data["amount"]} '
-                    f'{data["measurement_unit"]}')
+                f'{list_number}. {name} - {data["amount"]} '
+                f'{data["measurement_unit"]}'
+            )
         response = HttpResponse(
             shopping_cart_text, content_type='text.txt; charset=utf-8'
         )

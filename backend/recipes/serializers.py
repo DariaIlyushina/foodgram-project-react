@@ -1,6 +1,5 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
 from users.serializers import CustomUserSerializer
 from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
@@ -143,12 +142,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             "text",
             "cooking_time",
         )
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Ingredient.objects.all(),
-                fields=('recipe', 'ingredient'),
-            )
-        ]
 
     def _add_tags_and_ingredients(self, recipe, tags_data, ingredients_data):
         recipe.tags.set(tags_data)

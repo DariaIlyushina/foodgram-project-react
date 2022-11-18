@@ -17,20 +17,18 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
-        "pk",
         "name",
         "measurement_unit",
+    )
+    search_fields = (
+        'name',
     )
     list_filter = ("name",)
 
 
 @admin.register(IngredientAmount)
-class IngredientAmountAdmin(admin.ModelAdmin):
-    list_display = (
-        "pk",
-        "ingredient",
-        "amount",
-    )
+class LinksAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Recipe)

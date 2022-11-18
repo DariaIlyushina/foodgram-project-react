@@ -22,7 +22,7 @@ class TagTest(TestCase):
             slug="breakfast",
         )
         Tag.objects.create(
-            name="test Ужин",
+            name="test Обед",
             color="#E26C2D",
             slug="dinner",
         )
@@ -50,7 +50,7 @@ class TagTest(TestCase):
             },
             {
                 "id": 2,
-                "name": "test Ужин",
+                "name": "test Обед",
                 "color": "#E26C2D",
                 "slug": "dinner",
             },
@@ -70,7 +70,7 @@ class TagTest(TestCase):
             },
             {
                 "id": 2,
-                "name": "test Ужин",
+                "name": "test Обед",
                 "color": "#E26C2D",
                 "slug": "dinner",
             },

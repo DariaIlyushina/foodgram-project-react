@@ -34,12 +34,12 @@ class RecipeTest(TestCase):
         cls.test_client = APIClient()
         cls.test_client.force_authenticate(cls.test_user)
 
-        cls.ingredient_apple = Ingredient.objects.create(
-            name="test яблоко",
+        cls.ingredient_orange = Ingredient.objects.create(
+            name="test апельсин",
             measurement_unit="шт.",
         )
         cls.ingredient_jam = Ingredient.objects.create(
-            name="test джем",
+            name="test варенье",
             measurement_unit="ложка",
         )
         cls.tag_breakfast = Tag.objects.create(
@@ -48,7 +48,7 @@ class RecipeTest(TestCase):
             slug="breakfast",
         )
         cls.tag_dinner = Tag.objects.create(
-            name="test Ужин",
+            name="test Обед",
             color="#6AA84FFF",
             slug="dinner",
         )
@@ -77,7 +77,7 @@ class RecipeTest(TestCase):
             author=cls.user,
             name="test рецепт",
             image=cls.uploaded,
-            text="тестовый рецепт",
+            text="описание тестового рецепта",
             cooking_time=4,
         )
         cls.recipe_breakfast.tags.add(cls.tag_breakfast)
@@ -103,7 +103,7 @@ class RecipeTest(TestCase):
             author=cls.user,
             name="тестовый рецепт",
             image=cls.uploaded_test,
-            text="описание",
+            text="описание тестового рецепта",
             cooking_time=4,
         )
         cls.recipe.tags.add(cls.tag_breakfast)
@@ -163,7 +163,7 @@ class RecipeTest(TestCase):
                     "image": (
                         "http://testserver/media/recipes/images/small_1.gif"
                     ),
-                    "text": "описание",
+                    "text": "описание тестового рецепта",
                     "cooking_time": 4,
                 },
                 {
@@ -193,7 +193,7 @@ class RecipeTest(TestCase):
                         },
                         {
                             "id": 2,
-                            "name": "test джем",
+                            "name": "test варенье",
                             "measurement_unit": "ложка",
                             "amount": 1,
                         },
@@ -236,13 +236,13 @@ class RecipeTest(TestCase):
             "ingredients": [
                 {
                     "id": 1,
-                    "name": "test яблоко",
+                    "name": "test апельсин",
                     "measurement_unit": "шт.",
                     "amount": 5,
                 },
                 {
                     "id": 2,
-                    "name": "test джем",
+                    "name": "test варенье",
                     "measurement_unit": "ложка",
                     "amount": 1,
                 },
@@ -281,13 +281,13 @@ class RecipeTest(TestCase):
             "ingredients": [
                 {
                     "id": 1,
-                    "name": "test яблоко",
+                    "name": "test апельсин",
                     "measurement_unit": "шт.",
                     "amount": 5,
                 },
                 {
                     "id": 2,
-                    "name": "test джем",
+                    "name": "test варенье",
                     "measurement_unit": "ложка",
                     "amount": 1,
                 },
@@ -296,7 +296,7 @@ class RecipeTest(TestCase):
             "is_in_shopping_cart": False,
             "name": "test рецепт",
             "image": "http://testserver/media/recipes/images/small.gif",
-            "text": "описание",
+            "text": "описание тестового рецепта",
             "cooking_time": 4,
         }
         self.assertEqual(response.json(), test_json)
@@ -315,8 +315,8 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "name": "Тестовый рецепт Ужина",
-            "text": "Описание тестового рецепта Ужина",
+            "name": "Тестовый рецепт обеда",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
         response = self.guest_client.post(url, data, format="json")
@@ -339,8 +339,8 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "name": "Тестовый рецепт Ужина",
-            "text": "Описание тестового рецепта Ужина",
+            "name": "Тестовый рецепт обеда",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
         response = self.authorized_client.post(url, data, format="json")
@@ -360,7 +360,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 2,
-                    "name": "test Ужин",
+                    "name": "test Обед",
                     "color": "#6AA84FFF",
                     "slug": "dinner",
                 },
@@ -376,22 +376,22 @@ class RecipeTest(TestCase):
             "ingredients": [
                 {
                     "id": 3,
-                    "name": "test яблоко",
+                    "name": "test апельсин",
                     "measurement_unit": "шт.",
                     "amount": 10,
                 },
                 {
                     "id": 4,
-                    "name": "test джем",
+                    "name": "test варенье",
                     "measurement_unit": "ложка",
                     "amount": 30,
                 },
             ],
             "is_favorited": False,
             "is_in_shopping_cart": False,
-            "name": "Тестовый рецепт",
+            "name": "Тестовый рецепт обеда",
             "image": image,
-            "text": "Описание ужина",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
         self.assertEqual(response.json(), test_json)
@@ -405,8 +405,8 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "name": "Тестовый рецепт ужина",
-            "text": "Описание тестового рецепта ужина",
+            "name": "Тестовый рецепт обеда",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
         response = self.authorized_client.post(url, data, format="json")
@@ -426,8 +426,8 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "name": "Тестовый рецепт ужина",
-            "text": "Описание тестового рецепта ужина",
+            "name": "Тестовый рецепт обеда",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
         response = self.authorized_client.post(url, data, format="json")
@@ -443,13 +443,13 @@ class RecipeTest(TestCase):
                 {"id": self.ingredient_jam.id, "amount": 30},
             ],
             "tags": [self.tag_breakfast.id, self.tag_dinner.id],
-            "name": "Тестовый рецепт ужина",
-            "text": "Описание тестового рецепта ужина",
+            "name": "Тестовый рецепт обеда",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
         response = self.authorized_client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        test_json = {"image": ["Ни одного файла не отправлено."]}
+        test_json = {"image": ["Ни одного файла не было отправлено."]}
         self.assertEqual(response.json(), test_json)
 
     def test_create_recipe_without_name(self):
@@ -465,7 +465,7 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "text": "Описание тестового рецепта Ужина",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
         response = self.authorized_client.post(url, data, format="json")
@@ -486,7 +486,7 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "name": "Тестовый рецепт Ужина",
+            "name": "Тестовый рецепт обеда",
             "cooking_time": 30,
         }
         response = self.authorized_client.post(url, data, format="json")
@@ -507,8 +507,8 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "name": "Тестовый рецепт ужина",
-            "text": "Описание тестового рецепта ужина",
+            "name": "Тестовый рецепт обеда",
+            "text": "Описание тестового рецепта обеда",
         }
         response = self.authorized_client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -523,8 +523,8 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "name": "Тестовый рецепт ужина",
-            "text": "Описание тестового рецепта ужина",
+            "name": "Тестовый рецепт обеда",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": 30,
         }
         response = self.authorized_client.post(url, data, format="json")
@@ -551,7 +551,6 @@ class RecipeTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_create_recipe_negative_cooking_time(self):
-
         url = "/api/recipes/"
         data = {
             "ingredients": [
@@ -564,8 +563,8 @@ class RecipeTest(TestCase):
                 + "AABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAO"
                 + "xAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=="
             ),
-            "name": "Тестовый рецепт Ужина",
-            "text": "Описание тестового рецепта Ужина",
+            "name": "Тестовый рецепт обеда",
+            "text": "Описание тестового рецепта обеда",
             "cooking_time": -1,
         }
         response = self.authorized_client.post(url, data, format="json")
@@ -619,7 +618,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 2,
-                    "name": "test Ужин",
+                    "name": "test Обед",
                     "color": "#6AA84FFF",
                     "slug": "dinner",
                 },
@@ -641,7 +640,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 4,
-                    "name": "test джем",
+                    "name": "test варенье",
                     "measurement_unit": "ложка",
                     "amount": 30,
                 },
@@ -693,7 +692,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 2,
-                    "name": "test Ужин",
+                    "name": "test Обед",
                     "color": "#6AA84FFF",
                     "slug": "dinner",
                 },
@@ -715,7 +714,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 4,
-                    "name": "test джем",
+                    "name": "test варенье",
                     "measurement_unit": "ложка",
                     "amount": 30,
                 },
@@ -818,7 +817,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 2,
-                    "name": "test Ужин",
+                    "name": "test Обед",
                     "color": "#6AA84FFF",
                     "slug": "dinner",
                 },
@@ -840,7 +839,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 4,
-                    "name": "test джем",
+                    "name": "test варенье",
                     "measurement_unit": "ложка",
                     "amount": 30,
                 },
@@ -1157,7 +1156,7 @@ class RecipeTest(TestCase):
                         },
                         {
                             "id": 2,
-                            "name": "test джем",
+                            "name": "test варенье",
                             "measurement_unit": "ложка",
                             "amount": 1,
                         },
@@ -1268,7 +1267,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 2,
-                    "name": "test джем",
+                    "name": "test варенье",
                     "measurement_unit": "ложка",
                     "amount": 1,
                 },
@@ -1316,7 +1315,7 @@ class RecipeTest(TestCase):
                 },
                 {
                     "id": 2,
-                    "name": "test джем",
+                    "name": "test варенье",
                     "measurement_unit": "ложка",
                     "amount": 1,
                 },
@@ -1427,7 +1426,7 @@ class RecipeTest(TestCase):
                         },
                         {
                             "id": 2,
-                            "name": "test джем",
+                            "name": "test варенье",
                             "measurement_unit": "ложка",
                             "amount": 1,
                         },
@@ -1572,11 +1571,10 @@ class RecipeTest(TestCase):
         self.assertEqual(response.getvalue(), test_text)
 
     def test_download_shopping_cart_unauthorized_user(self):
-
         url = "/api/recipes/download_shopping_cart/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        test_json = {"detail": "Учетных данных нет."}
+        test_json = {"detail": "Учетные данные не были предоставлены."}
         self.assertEqual(response.json(), test_json)
 
     def test_get_recipes_filter_by_author(self):
@@ -1766,6 +1764,7 @@ class RecipeTest(TestCase):
         self.assertEqual(sorted(test_recipes_id), [])
 
     def test_get_ingredients_search_by_name(self):
+        """Поиск ингредиентов по имени."""
         ingredient_1 = Ingredient.objects.create(
             name="ингредиент 1",
             measurement_unit="шт",

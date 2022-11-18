@@ -17,16 +17,15 @@ class IngredientTest(TestCase):
         cls.authorized_client = APIClient()
         cls.authorized_client.force_authenticate(cls.user)
         Ingredient.objects.create(
-            name="test яблоко",
+            name="test апельсин",
             measurement_unit="шт.",
         )
         Ingredient.objects.create(
-            name="test джем",
+            name="test варенье",
             measurement_unit="ложка",
         )
 
     def test_cool_test(self):
-        """cool test"""
         self.assertEqual(True, True)
 
     @unittest.expectedFailure
@@ -42,12 +41,12 @@ class IngredientTest(TestCase):
         test_json = [
             {
                 "id": 1,
-                "name": "test яблоко",
+                "name": "test апельсин",
                 "measurement_unit": "шт.",
             },
             {
                 "id": 2,
-                "name": "test джем",
+                "name": "test варенье",
                 "measurement_unit": "ложка",
             },
         ]
@@ -60,12 +59,12 @@ class IngredientTest(TestCase):
         test_json = [
             {
                 "id": 1,
-                "name": "test яблоко",
+                "name": "test апельсин",
                 "measurement_unit": "шт.",
             },
             {
                 "id": 2,
-                "name": "test джем",
+                "name": "test варенье",
                 "measurement_unit": "ложка",
             },
         ]
@@ -78,7 +77,7 @@ class IngredientTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         test_json = {
             "id": 2,
-            "name": "test джем",
+            "name": "test варенье",
             "measurement_unit": "ложка",
         }
         self.assertEqual(response.json(), test_json)

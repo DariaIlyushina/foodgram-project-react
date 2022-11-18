@@ -1,5 +1,4 @@
-import copy
-
+from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
@@ -13,8 +12,8 @@ from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
 from .pagination import RecipePagination
 from .permissions import IsAuthorOrAdminOrIsAuthenticatedOrReadOnly
 from .serializers import (IngredientSerializer, RecipeReadSerializer,
-                          RecipeWriteSerializer, ShortRecipeSerializer,
-                          TagSerializer)
+                          RecipeWriteSerializer,
+                          ShortRecipeSerializer, TagSerializer)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -44,56 +43,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        instance = serializer.instance
-        serializer = RecipeReadSerializer(
-            instance=instance, context={"request": request}
-        )
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
-
-    def perform_update(self, serializer):
-        serializer.save(author=self.request.user)
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop("partial", False)
-        instance = self.get_object()
-
-        data = request.data
-        data = copy.deepcopy(request.data)
-        if not request.data.get("image"):
-            test_base64code = (
-                "R0lGODlhAgABAIAAAAAAAP///yH5BAAAAAAALAAAAAACAAEAAAICDAoAOw=="
-            )
-            data["image"] = test_base64code
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-
-        serializer = self.get_serializer(
-            instance=instance,
-            data=request.data,
-            partial=partial,
-        )
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        instance = serializer.instance
-        serializer = RecipeReadSerializer(
-            instance=instance,
-            context={"request": request},
-        )
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def _do_post_method(self, request, model, error_data):
         user = request.user
         recipe = self.get_object()
         if model.objects.filter(
-            user=user,
-            recipe=recipe,
+                user=user,
+                recipe=recipe,
         ).exists():
             return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
         model.objects.create(
@@ -124,11 +79,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def favorite(self, request, pk=None):
+        model = Favorite
         if request.method == "POST":
-            model = Favorite
             error_data = {"errors": "Рецепт уже добавлен в избранное"}
             return self._do_post_method(request, model, error_data)
-        model = Favorite
         error_data = {"errors": "Рецепт уже удален из избранного"}
         return self._do_delete_method(request, model, error_data)
 
@@ -138,11 +92,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def shopping_cart(self, request, pk=None):
+        model = ShoppingCart
         if request.method == "POST":
-            model = ShoppingCart
             error_data = {"errors": "Рецепт уже добавлен в корзину"}
             return self._do_post_method(request, model, error_data)
-        model = ShoppingCart
         error_data = {"errors": "Рецепт уже удален из корзины"}
         return self._do_delete_method(request, model, error_data)
 
@@ -155,31 +108,33 @@ class RecipeViewSet(viewsets.ModelViewSet):
         user = request.user
         ingredient_queryset = IngredientAmount.objects.filter(
             recipes__shoppingcart__user=user
-        ).values_list(
-            "ingredient",
+        ).values(
             "ingredient__name",
             "ingredient__measurement_unit",
-            "amount",
+        ).annotate(
+            ingredient_sum=Sum('amount')
+        ).values_list(
+            'ingredient__name',
+            'ingredient_sum',
+            'ingredient__measurement_unit',
         )
-
-        ingredient_dict = {}
-        for ingredient in ingredient_queryset:
-            if ingredient[0] in ingredient_dict:
-                ingredient_dict[ingredient[0]][2] += ingredient[3]
-            ingredient_dict[ingredient[0]] = [
-                ingredient[1],
-                ingredient[2],
-                ingredient[3],
-            ]
-
-        shopping_cart_text = ""
-        for ingredient in ingredient_dict:
+        shopping_cart = {}
+        for item in ingredient_queryset:
+            name = item[0]
+            if name not in shopping_cart:
+                shopping_cart[name] = {
+                    'amount': item[1],
+                    'measurement_unit': item[2],
+                }
+        filename = 'hopping_list.txt'
+        shopping_cart_text = 'Список покупок: '
+        for list_number, (name, data) in enumerate(shopping_cart.items(), 1):
             shopping_cart_text += (
-                f"{ingredient_dict[ingredient][0]} "
-                f"({ingredient_dict[ingredient][1]}) - "
-                f"{ingredient_dict[ingredient][2]} \n"
+                f'{list_number}. {name} - {data["amount"]} '
+                f'{data["measurement_unit"]}'
             )
-        return HttpResponse(
-            shopping_cart_text,
-            content_type="text/plain; charset=utf8",
+        response = HttpResponse(
+            shopping_cart_text, content_type='text.txt; charset=utf-8'
         )
+        response['Content-Disposition'] = f'attachment; filename={filename}'
+        return response

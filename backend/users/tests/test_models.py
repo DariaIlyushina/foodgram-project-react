@@ -11,19 +11,15 @@ class UsersModelsViewsTest(TestCase):
         cls.author = User.objects.create(username="author")
 
     def test_cool_test(self):
-        """Cool test."""
         self.assertEqual(True, True)
 
     def test_no_self_subscription(self):
-        """Модель Subscription не позволяет пользователю подписаться на самого
-        себя."""
         user = User.objects.create()
         constraint_name = "prevent_self_subscription"
         with self.assertRaisesMessage(IntegrityError, constraint_name):
             Subscription.objects.create(user=user, author=user)
 
     def test_unique_subscription(self):
-        """Нельзя повторно подписаться на пользователя."""
         Subscription.objects.create(
             user=self.user,
             author=self.author,

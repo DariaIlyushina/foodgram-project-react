@@ -33,13 +33,11 @@ class TagTest(TestCase):
 
     @unittest.expectedFailure
     def test_get_tag_list_unauthorized_user(self):
-        """Получение списка тегов неавторизованным пользователем"""
         url = "/api/tags/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_tag_list_guest_client(self):
-        """Получение списка тегов неавторизованным пользователем."""
         url = "/api/tags/"
         response = self.guest_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -60,7 +58,6 @@ class TagTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_get_tag_list_authorized_client(self):
-        """Получение списка тегов авторизованным пользователем."""
         url = "/api/tags/"
         response = self.authorized_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -81,7 +78,6 @@ class TagTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_get_tag(self):
-        """Получение тега."""
         url = f"/api/tags/{self.tag_breakfast.id}/"
         response = self.authorized_client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -94,7 +90,6 @@ class TagTest(TestCase):
         self.assertEqual(response.json(), test_json)
 
     def test_get_tag_404(self):
-        """Получение несуществующего тега."""
         tag_count = Tag.objects.count()
         url = f"/api/tags/{tag_count + 1}/"
         response = self.authorized_client.get(url)

@@ -115,9 +115,9 @@ class UsersViewsTest(TestCase):
                 {
                     "email": "Alexiy@gmail.com",
                     "id": 3,
-                    "username": "vasya_pupkin",
-                    "first_name": "Vasya",
-                    "last_name": "Pupkin",
+                    "username": "Alexiy.popka",
+                    "first_name": "Константин",
+                    "last_name": "Христорождественский",
                     "is_subscribed": True,
                 },
             ],

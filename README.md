@@ -31,7 +31,7 @@ Postgres
 
 Установите docker-compose на сервер.
 
-Локально отредактируйте файл infra/nginx/default.conf.conf, в строке server_name впишите свой IP
+Локально отредактируйте файлы и укажите везде свой IP
 
 Скопируйте файлы docker-compose.yml и nginx.conf из папки infra на сервер
 
@@ -46,6 +46,43 @@ Postgres
     DB_HOST='db'
     DB_PORT=5432
     
+Скопируйте папку docs на сервер:
+
+    scp -r docs <username>@<ip host>@<ваш адрес сервера>:/home/<username>/
+
 Запустите создание образа
 
     sudo docker-compose up -d
+
+Для работы с Workflow вам в Secrets GitHub понадобятся переменные окружения:
+
+    DB_ENGINE=<django.db.backends.postgresql>
+    DB_NAME=<имя базы данных postgres>
+    DB_USER=<пользователь бд>
+    DB_PASSWORD=<пароль>
+    DB_HOST=<db>
+    DB_PORT=<5432>
+
+    DOCKER_PASSWORD=<пароль от DockerHub>
+    DOCKER_USERNAME=<имя пользователя на DockerHub>
+
+    SECRET_KEY=<секретный ключ проекта django>
+
+    USER=<username для подключения к серверу>
+    HOST=<IP сервера>
+    SSH_KEY=<ваш SSH ключ (для получения выполните команду: cat ~/.ssh/id_rsa)>
+    PASSPHRASE=<если при создании ssh-ключа вы использовали фразу-пароль>
+
+    TELEGRAM_TO=<ID чата, в который придет сообщение, узнать свой ID можно у бота @userinfobot>
+    TELEGRAM_TOKEN=<токен вашего бота, получить этот токен можно у бота @BotFather>
+    
+
+Workflow состоит из четырех шагов:
+
+1.Проверка кода на соответствие PEP8 и выполнение тестов, реализованных в проекте.
+
+2.Сборка и публикация образа приложения на DockerHub.
+
+3.Автоматическое скачивание образа приложения и деплой на удаленном сервере.
+
+4.Отправка уведомления в телеграм-чат./dr

@@ -12,10 +12,10 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "testserver",
     "backend",
-    "51.250.26.119",
+    "158.160.9.160",
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://*.51.250.26.119', 'http://*.localhost', 'http://*.testserver']
+CSRF_TRUSTED_ORIGINS = ['http://*.158.160.9.160', 'http://*.localhost', 'http://*.testserver']
 
 INSTALLED_APPS = [
     "django.contrib.admin",

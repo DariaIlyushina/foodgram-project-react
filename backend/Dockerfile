@@ -1,6 +1,6 @@
 FROM python:3.8-slim
 
-RUN mkdir /app_backend
+WORKDIR /app
 
 COPY requirements.txt /app_backend
 
